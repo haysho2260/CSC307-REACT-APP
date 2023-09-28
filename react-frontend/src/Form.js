@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 
-function Form() {
+function Form(props) {
   const [person, setPerson] = useState({ name: "", job: "" });
+  function submitForm() {
+    props.handleSubmit(person);
+    setPerson({ name: "", job: "" });
+  }
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    if (name === "job") setPerson({ name: person["name"], job: value });
+    else setPerson({ name: value, job: person["job"] });
+  }
   return (
     <form>
       <label htmlFor="name">Name</label>
@@ -20,16 +30,12 @@ function Form() {
         value={person.job}
         onChange={handleChange}
       />
+      <input type="button" value="Submit" onClick={submitForm} />
     </form>
   );
 }
 
 // sets the state define in form
 // one event at a time (either delete or add)
-function handleChange(event) {
-  const { name, value } = event.target;
 
-  if (name === "job") setPerson({ name: person["name"], job: value });
-  else setPerson({ name: value, job: person["job"] });
-}
 export default Form;
