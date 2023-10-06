@@ -34,15 +34,14 @@ const users = {
   ],
 };
 const findUserByName = (name) => {
-  return users["users_list"].find((user) => user["name"] === name);
+    return users["users_list"].filter((user) => user["name"] === name);
 };
 const findUserByNameJob = (name, job) => {
-  return users["users_list"].find(
-    (user) => user["name"] === name && user["user"] === job
-  );
+    return users["users_list"].filter((user) => (user["name"] === name && user["job"] === job));
 };
 const findUserByJob = (job) => {
-  return users["users_list"].find((user) => user["job"] === job);
+    return users["users_list"].filter((user) => user["job"] === job);
+
 };
 
 app.use(express.json());
