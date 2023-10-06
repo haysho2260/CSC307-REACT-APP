@@ -1,11 +1,26 @@
 // src/MyApp.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "./Table";
 import Form from "./Form";
 
-
 function MyApp() {
   const [characters, setCharacters] = useState([]);
+
+  function fetchUsers() {
+    const promise = fetch("http://localhost:8000/users");
+    return promise;
+  }
+
+  useEffect(() => {
+    // may have error becuase json returne dby server may invalid
+    fetchUsers()
+      // because we expect a json format
+      .then((res) => res.json())
+      .then((json) => setCharacters(json["users_list"]))
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   function removeOneCharacter(index) {
     const updated = characters.filter((character, i) => {
