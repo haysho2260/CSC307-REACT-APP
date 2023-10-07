@@ -35,15 +35,14 @@ const users = {
   ],
 };
 const findUserByName = (name) => {
-  return users["users_list"].filter((user) => user["name"] === name);
+    return users["users_list"].filter((user) => user["name"] === name);
 };
 const findUserByNameJob = (name, job) => {
-  return users["users_list"].filter(
-    (user) => user["name"] === name && user["job"] === job
-  );
+    return users["users_list"].filter((user) => (user["name"] === name && user["job"] === job));
 };
 const findUserByJob = (job) => {
-  return users["users_list"].filter((user) => user["job"] === job);
+    return users["users_list"].filter((user) => user["job"] === job);
+
 };
 app.use(cors());
 app.use(express.json());
@@ -95,17 +94,14 @@ app.get("/users/:id", (req, res) => {
 });
 
 const addUser = (user) => {
-  user.id = Math.floor(Math.random() * (2 ** 32 - 1))
-  // can use find to see if there is a duplicate id
   users["users_list"].push(user);
   return user;
 };
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  console.log("request body", JSON.stringify(userToAdd));
-  let user = addUser(userToAdd);
-  res.status(201).send(user);
+  addUser(userToAdd);
+  res.send();
 });
 
 const deleteUserID = (id) => {
@@ -117,7 +113,7 @@ app.delete("/users/:id", (req, res) => {
   const update_deleted = deleteUserID(id);
   if (update_deleted !== -1) {
     users["users_list"].splice(update_deleted, 1);
-    res.status(200).send({ message: `ID ${id} has been deleted` });
+    res.status(204).send({ message: `ID ${id} has been deleted` });
   } else {
     res.status(404).send("Not Found"); // Return a "Not Found" error response
   }
