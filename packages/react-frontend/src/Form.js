@@ -3,6 +3,7 @@ import React, { useState } from "react";
 function Form(props) {
   const [person, setPerson] = useState({ name: "", job: "" });
   function submitForm() {
+    console.log("person", person);
     props.handleSubmit(person);
     setPerson({ name: "", job: "" });
   }

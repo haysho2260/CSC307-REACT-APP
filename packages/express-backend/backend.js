@@ -35,14 +35,15 @@ const users = {
   ],
 };
 const findUserByName = (name) => {
-    return users["users_list"].filter((user) => user["name"] === name);
+  return users["users_list"].filter((user) => user["name"] === name);
 };
 const findUserByNameJob = (name, job) => {
-    return users["users_list"].filter((user) => (user["name"] === name && user["job"] === job));
+  return users["users_list"].filter(
+    (user) => user["name"] === name && user["job"] === job
+  );
 };
 const findUserByJob = (job) => {
-    return users["users_list"].filter((user) => user["job"] === job);
-
+  return users["users_list"].filter((user) => user["job"] === job);
 };
 app.use(cors());
 app.use(express.json());
@@ -81,7 +82,7 @@ app.get("/users", (req, res) => {
 });
 
 const findUserById = (id) =>
-  users["users_list"].find((user) => user["id"] === id);
+  users["users_list"].find((user) => user["id"] === id.toString());
 
 app.get("/users/:id", (req, res) => {
   const id = req.params["id"]; //or req.params.id
@@ -94,26 +95,30 @@ app.get("/users/:id", (req, res) => {
 });
 
 const addUser = (user) => {
+  user.id = (Math.floor(Math.random() * (2 ** 32 - 1))).toString();
+  // can use find to see if there is a duplicate id
   users["users_list"].push(user);
   return user;
 };
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+  console.log("request body", JSON.stringify(userToAdd));
+  let user = addUser(userToAdd);
+  res.status(201).send(user);
 });
 
 const deleteUserID = (id) => {
-  return users["users_list"].findIndex((user) => user.id === id);
+  const index = users["users_list"].findIndex((user) => user.id.toString() === id.toString());
+  return index !== -1 ? index : undefined;
 };
 
 app.delete("/users/:id", (req, res) => {
   const id = req.params.id;
   const update_deleted = deleteUserID(id);
-  if (update_deleted !== -1) {
+  if (update_deleted) {
     users["users_list"].splice(update_deleted, 1);
-    res.status(204).send({ message: `ID ${id} has been deleted` });
+    res.status(200).send({ message: `ID ${id} has been deleted` });
   } else {
     res.status(404).send("Not Found"); // Return a "Not Found" error response
   }
