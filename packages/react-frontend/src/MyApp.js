@@ -27,7 +27,7 @@ function MyApp() {
   }
 
   function deleteUser(person) {
-    const promise = fetch(`http://localhost:8000/users/${person.id}`, {
+    const promise = fetch(`http://localhost:8000/users/${person._id}`, {
       method: "DELETE",
     });
 
@@ -61,8 +61,9 @@ function MyApp() {
     const updated = characters.filter((character, i) => {
       return i !== index;
     });
-    deleteUser(characters[index])
-    setCharacters(updated);
+    deleteUser(characters[index]).then((res) =>
+      res.status == 204 ? setCharacters(updated) : undefined
+    );
   }
 
   return (
